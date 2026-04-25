@@ -1,0 +1,44 @@
+# Demo Compose file: builds the webppipe image and converts the bundled
+# example.jpg.
+#
+# The repository root is bind-mounted at /work, the include filter is set
+# to "example.jpg" so only the demo file is touched, and git operations are
+# disabled so nothing is committed.
+#
+# Usage:
+#   docker compose run --rm webppipe                 # convert, keep original (default)
+#   docker compose run --rm webppipe-replace         # convert and replace original
+#   docker compose run --rm webppipe-dry-run         # show plan, no writes
+#
+# After running, example.webp appears next to example.jpg in the project root.
+
+x-common: &common
+  build: .
+  image: webppipe:local
+  working_dir: /work
+  volumes:
+    - ./:/work
+
+services:
+  webppipe:
+    <<: *common
+    environment:
+      WEBPPIPE_INCLUDE: "example.jpg"
+      WEBPPIPE_GIT_ENABLED: "false"
+      WEBPPIPE_KEEP_ORIGINALS: "true"
+      WEBPPIPE_QUALITY: "82"
+
+  webppipe-replace:
+    <<: *common
+    environment:
+      WEBPPIPE_INCLUDE: "example.jpg"
+      WEBPPIPE_GIT_ENABLED: "false"
+      WEBPPIPE_KEEP_ORIGINALS: "false"
+      WEBPPIPE_QUALITY: "82"
+
+  webppipe-dry-run:
+    <<: *common
+    environment:
+      WEBPPIPE_INCLUDE: "example.jpg"
+      WEBPPIPE_GIT_ENABLED: "false"
+      WEBPPIPE_DRY_RUN: "true"

@@ -1,0 +1,5 @@
+/webppipe
+/webppipe.exe
+**/data/*.yaml
+/dist/
+.DS_Store

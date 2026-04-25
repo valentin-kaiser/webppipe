@@ -1,0 +1,32 @@
+name: Optimize images
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "**/*.png"
+      - "**/*.jpg"
+      - "**/*.jpeg"
+
+permissions:
+  contents: write
+
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Optimize images to WebP
+        uses: valentin-kaiser/webppipe@v1
+        with:
+          quality: "82"
+          max-width: "1920"
+          exclude: ".git/**,node_modules/**,vendor/**,docs/legacy/**"
+          commit: "true"
+          push: "true"
+          commit-message: "chore: optimize images to WebP"

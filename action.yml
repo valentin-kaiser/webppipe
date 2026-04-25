@@ -1,0 +1,93 @@
+name: "webppipe"
+description: "Optimize images in a repository by converting PNG/JPEG to WebP and committing the result."
+author: "Valentin Kaiser"
+branding:
+  icon: "image"
+  color: "blue"
+
+inputs:
+  quality:
+    description: "WebP quality (1-100). Ignored when lossless is true."
+    required: false
+    default: "80"
+  lossless:
+    description: "Use lossless WebP encoding."
+    required: false
+    default: "false"
+  max-width:
+    description: "Maximum image width in pixels (0 = unlimited)."
+    required: false
+    default: "0"
+  max-height:
+    description: "Maximum image height in pixels (0 = unlimited)."
+    required: false
+    default: "0"
+  include:
+    description: "Comma-separated glob patterns of files to include."
+    required: false
+    default: "**/*.png,**/*.jpg,**/*.jpeg,**/*.PNG,**/*.JPG,**/*.JPEG"
+  exclude:
+    description: "Comma-separated glob patterns of files to exclude."
+    required: false
+    default: ".git/**,node_modules/**,vendor/**"
+  keep-originals:
+    description: "Keep original files alongside the generated .webp files. Set to 'false' to replace originals."
+    required: false
+    default: "true"
+  dry-run:
+    description: "Report planned conversions without writing files."
+    required: false
+    default: "false"
+  concurrency:
+    description: "Number of parallel conversion workers (0 = NumCPU)."
+    required: false
+    default: "0"
+  repo-path:
+    description: "Path to the repository / working directory."
+    required: false
+    default: "."
+  commit:
+    description: "Commit converted files."
+    required: false
+    default: "true"
+  push:
+    description: "Push the commit to the remote."
+    required: false
+    default: "true"
+  commit-message:
+    description: "Commit message for converted files."
+    required: false
+    default: "chore: optimize images to WebP"
+  author-name:
+    description: "Git author name used for the commit."
+    required: false
+    default: "webppipe[bot]"
+  author-email:
+    description: "Git author email used for the commit."
+    required: false
+    default: "webppipe@users.noreply.github.com"
+  branch:
+    description: "Branch to push to (empty = current branch)."
+    required: false
+    default: ""
+
+runs:
+  using: "docker"
+  image: "Dockerfile"
+  env:
+    WEBPPIPE_QUALITY: ${{ inputs.quality }}
+    WEBPPIPE_LOSSLESS: ${{ inputs.lossless }}
+    WEBPPIPE_MAX_WIDTH: ${{ inputs.max-width }}
+    WEBPPIPE_MAX_HEIGHT: ${{ inputs.max-height }}
+    WEBPPIPE_INCLUDE: ${{ inputs.include }}
+    WEBPPIPE_EXCLUDE: ${{ inputs.exclude }}
+    WEBPPIPE_KEEP_ORIGINALS: ${{ inputs.keep-originals }}
+    WEBPPIPE_DRY_RUN: ${{ inputs.dry-run }}
+    WEBPPIPE_CONCURRENCY: ${{ inputs.concurrency }}
+    WEBPPIPE_REPO_PATH: ${{ inputs.repo-path }}
+    WEBPPIPE_GIT_ENABLED: ${{ inputs.commit }}
+    WEBPPIPE_GIT_PUSH: ${{ inputs.push }}
+    WEBPPIPE_GIT_COMMIT_MESSAGE: ${{ inputs.commit-message }}
+    WEBPPIPE_GIT_AUTHOR_NAME: ${{ inputs.author-name }}
+    WEBPPIPE_GIT_AUTHOR_EMAIL: ${{ inputs.author-email }}
+    WEBPPIPE_GIT_BRANCH: ${{ inputs.branch }}
