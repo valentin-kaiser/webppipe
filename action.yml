@@ -79,6 +79,7 @@ runs:
       run: |
         docker build -t webppipe:action "${{ github.action_path }}"
         docker run --rm \
+          --user "$(id -u):$(id -g)" \
           -v "${{ github.workspace }}:/github/workspace" \
           -w /github/workspace \
           -e WEBPPIPE_QUALITY="${{ inputs.quality }}" \
