@@ -29,4 +29,4 @@ jobs:
           exclude: ".git/**,node_modules/**,vendor/**,docs/legacy/**"
           commit: "true"
           push: "true"
-          commit-message: "chore: optimize images to WebP"
+          commit-message: "[GEN] optimize images to WebP"

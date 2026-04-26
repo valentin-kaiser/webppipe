@@ -62,7 +62,7 @@ A complete example lives in [.github/workflows/example-usage.yml](.github/workfl
 | `repo-path`      | `.`                                                        | Working directory (typically the repo root).                 |
 | `commit`         | `true`                                                     | Commit converted files.                                      |
 | `push`           | `true`                                                     | Push the commit to the remote.                               |
-| `commit-message` | `chore: optimize images to WebP`                           | Commit message.                                              |
+| `commit-message` | `[GEN] optimize images to WebP`                           | Commit message.                                              |
 | `author-name`    | `webppipe[bot]`                                            | Git author name.                                             |
 | `author-email`   | `webppipe@users.noreply.github.com`                        | Git author email.                                            |
 | `branch`         | _(empty)_                                                  | Branch to push to (empty = current branch).                  |
@@ -120,7 +120,7 @@ concurrency: 4
 repo-path: "."
 git:
   enabled: true
-  commit-message: "chore: optimize images to WebP"
+  commit-message: "optimize images to WebP"
   author-name: "webppipe[bot]"
   author-email: "webppipe@users.noreply.github.com"
   branch: ""

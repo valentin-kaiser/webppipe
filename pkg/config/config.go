@@ -66,7 +66,7 @@ func Default() *Config {
 		RepoPath:      ".",
 		Git: GitConfig{
 			Enabled:       true,
-			CommitMessage: "chore: optimize images to WebP",
+			CommitMessage: "[GEN] optimize images to WebP",
 			AuthorName:    "webppipe[bot]",
 			AuthorEmail:   "webppipe@users.noreply.github.com",
 			Branch:        "",

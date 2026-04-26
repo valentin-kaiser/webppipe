@@ -57,7 +57,7 @@ inputs:
   commit-message:
     description: "Commit message for converted files."
     required: false
-    default: "chore: optimize images to WebP"
+    default: "[GEN] optimize images to WebP"
   author-name:
     description: "Git author name used for the commit."
     required: false
