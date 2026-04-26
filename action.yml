@@ -72,22 +72,37 @@ inputs:
     default: ""
 
 runs:
-  using: "docker"
-  image: "Dockerfile"
-  env:
-    WEBPPIPE_QUALITY: ${{ inputs.quality }}
-    WEBPPIPE_LOSSLESS: ${{ inputs.lossless }}
-    WEBPPIPE_MAX_WIDTH: ${{ inputs.max-width }}
-    WEBPPIPE_MAX_HEIGHT: ${{ inputs.max-height }}
-    WEBPPIPE_INCLUDE: ${{ inputs.include }}
-    WEBPPIPE_EXCLUDE: ${{ inputs.exclude }}
-    WEBPPIPE_KEEP_ORIGINALS: ${{ inputs.keep-originals }}
-    WEBPPIPE_DRY_RUN: ${{ inputs.dry-run }}
-    WEBPPIPE_CONCURRENCY: ${{ inputs.concurrency }}
-    WEBPPIPE_REPO_PATH: ${{ inputs.repo-path }}
-    WEBPPIPE_GIT_ENABLED: ${{ inputs.commit }}
-    WEBPPIPE_GIT_PUSH: ${{ inputs.push }}
-    WEBPPIPE_GIT_COMMIT_MESSAGE: ${{ inputs.commit-message }}
-    WEBPPIPE_GIT_AUTHOR_NAME: ${{ inputs.author-name }}
-    WEBPPIPE_GIT_AUTHOR_EMAIL: ${{ inputs.author-email }}
-    WEBPPIPE_GIT_BRANCH: ${{ inputs.branch }}
+  using: "composite"
+  steps:
+    - name: Convert images to WebP
+      shell: bash
+      run: |
+        docker build -t webppipe:action "${{ github.action_path }}"
+        docker run --rm \
+          -v "${{ github.workspace }}:/github/workspace" \
+          -w /github/workspace \
+          -e WEBPPIPE_QUALITY="${{ inputs.quality }}" \
+          -e WEBPPIPE_LOSSLESS="${{ inputs.lossless }}" \
+          -e WEBPPIPE_MAX_WIDTH="${{ inputs.max-width }}" \
+          -e WEBPPIPE_MAX_HEIGHT="${{ inputs.max-height }}" \
+          -e WEBPPIPE_INCLUDE="${{ inputs.include }}" \
+          -e WEBPPIPE_EXCLUDE="${{ inputs.exclude }}" \
+          -e WEBPPIPE_KEEP_ORIGINALS="${{ inputs.keep-originals }}" \
+          -e WEBPPIPE_DRY_RUN="${{ inputs.dry-run }}" \
+          -e WEBPPIPE_CONCURRENCY="${{ inputs.concurrency }}" \
+          -e WEBPPIPE_REPO_PATH="${{ inputs.repo-path }}" \
+          -e WEBPPIPE_GIT_ENABLED="false" \
+          webppipe:action
+
+    - name: Commit and push converted images
+      if: ${{ inputs.commit == 'true' && inputs.dry-run != 'true' }}
+      shell: bash
+      run: |
+        git config --local user.name "${{ inputs.author-name }}"
+        git config --local user.email "${{ inputs.author-email }}"
+        git add -A
+        git commit -m "${{ inputs.commit-message }}" || echo "No changes to commit"
+        if [[ "${{ inputs.push }}" == "true" ]]; then
+          BRANCH="${{ inputs.branch }}"
+          git push origin "HEAD:${BRANCH:-$(git rev-parse --abbrev-ref HEAD)}"
+        fi
