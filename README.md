@@ -38,7 +38,7 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: valentin-kaiser/webppipe@v1
+      - uses: valentin-kaiser/webppipe@master
         with:
           quality: "82"
           max-width: "1920"

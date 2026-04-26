@@ -22,7 +22,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Optimize images to WebP
-        uses: valentin-kaiser/webppipe@v1
+        uses: valentin-kaiser/webppipe@master
         with:
           quality: "82"
           max-width: "1920"
