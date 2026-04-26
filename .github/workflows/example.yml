@@ -2,10 +2,6 @@ name: Optimize images
 on:
   workflow_dispatch:
   push:
-    paths:
-      - "**/*.png"
-      - "**/*.jpg"
-      - "**/*.jpeg"
 
 permissions:
   contents: write
@@ -25,7 +21,6 @@ jobs:
         with:
           quality: "82"
           max-width: "1920"
-          exclude: ".git/**,node_modules/**,vendor/**,docs/legacy/**"
           commit: "true"
           push: "true"
           commit-message: "[GEN] optimize images to WebP"
