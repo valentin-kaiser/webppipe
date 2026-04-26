@@ -2,13 +2,12 @@ package processor
 
 import (
 	"image"
-	_ "image/jpeg"
-	_ "image/png"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/chai2010/webp"
+	"github.com/disintegration/imaging"
 	"github.com/valentin-kaiser/go-core/apperror"
 	"golang.org/x/image/draw"
 )
@@ -119,7 +118,7 @@ func ConvertFile(src string, opts EncodeOptions, keepOriginal, dryRun bool) (Con
 	if err != nil {
 		return res, apperror.Wrap(err)
 	}
-	img, _, err := image.Decode(f)
+	img, err := imaging.Decode(f, imaging.AutoOrientation(true))
 	cerr := f.Close()
 	if err != nil {
 		return res, apperror.Wrap(err)
