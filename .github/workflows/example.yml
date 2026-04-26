@@ -2,6 +2,9 @@ name: Optimize images
 on:
   workflow_dispatch:
   push:
+    branches-ignore:
+      - "master"
+      - "main"
 
 permissions:
   contents: write
